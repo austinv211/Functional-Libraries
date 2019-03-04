@@ -51,7 +51,6 @@ def doubleEveryOther(values: Iterable[int]) -> Iterable[int]:
 @curry
 def sumDigits(values: Iterable[int]) -> int:
     curryMap = curry(map)
-    curryConcat = curry(operator.concat)
     return compose(sum, concat, curryMap(toDigits))(values)
 
 #checkSum function

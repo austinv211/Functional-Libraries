@@ -53,7 +53,7 @@ def roadStepFastWrap(pathData: Tuple[Path, Path, int, int], sectionData: Section
 # define our optimalPath function
 def optimalPath(system: RoadSystem, debug: bool = False) -> Path:
     if debug:
-        (bestAPath, bestBPath, priceA, priceB) = myFoldl(roadStepFast, ([], [], 0, 0), system)
+        (bestAPath, bestBPath, priceA, priceB) = myFoldl(roadStepFastWrap, ([], [], 0, 0), system)
     else:
         (bestAPath, bestBPath, priceA, priceB) = myFoldl(roadStepFast, ([], [], 0, 0), system)
     if priceA <= priceB:

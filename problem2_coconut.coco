@@ -1,0 +1,67 @@
+# Name: problem2_coconut.coco
+# Author: Austin Vargason
+# Description: Implementing problem 2 Haskell code in Python
+
+from typing import TypeVar, List, Callable, Any, Iterable
+from functools import wraps
+from itertools import cycle, chain
+import operator
+
+
+#necessary prereq functions
+# zipWith function in python
+# zipWith takes a function and 2 lists and zips the list using the operation provided
+def myZipWith(f: Callable[[Any, Any], Any], listA: List[Any], listB: List[Any]) -> List[Any]:
+    """Return two lists added together
+    >>> listA = [1, 2, 3, 4, 5]
+    >>> listB = [6, 7, 8, 9, 10]
+    >>> myZipWith(operator.add, listA, listB)
+    [7, 9, 11, 13, 15]
+    """
+    return [(f(x[0],x[1])) for x in zip(listA, listB)]
+    #alternative
+    #return list(map(f, zip(listA, listB)))
+
+# reverse function
+def reverse(values: List[int]) -> List[int]:
+    return values[::-1]
+
+# toDigit function
+def toDigit(digit: str) -> int:
+    return int(digit)
+
+# to Digits function
+def toDigits(n: int) -> Iterable[int]:
+    return map(toDigit, str(n)) |> list
+
+# doubleEveryOther function
+def doubleEveryOther(values: Iterable[int]) -> Iterable[int]:
+    return (myZipWith$(operator.mul, cycle([1, 2]), ?)..reverse)(values)
+
+# sumDigits function
+def sumDigits(values: Iterable[int]):
+    return (sum..chain<*..map$(toDigits, ?))(values)
+
+#checkSum function
+def checkSum(n: int) -> int:
+    return (sumDigits..doubleEveryOther..toDigits)(n)
+
+#isValid function
+def isValid(n: int) -> bool:
+    return (operator.eq$(0,?)..operator.mod$(?, 10)..checkSum)(n)
+
+# myFlip function
+def myFlip(f: Callable[[A, B], C]) -> Callable[[B, A], C]:
+    @wraps(f)
+    def newF(*args):
+        return f(*args[::-1])
+    return newF
+
+# testCC function
+def testCC() -> Iterable[bool]:
+    return map(isValid, [1234567890123456, 1234567890123452]) |> list
+
+
+testCC() |> print
+
+

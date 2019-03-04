@@ -4,7 +4,7 @@ import operator
 
 # prereq functions
 # myFoldl function
-def myFoldl(f: Callable[[Any, Any], Any], accInit: Any, values: List[Any]) -> Any:
+def myFoldl(f: Callable[[Any, Any, Any], Any], accInit: Any, values: List[Any]) -> Any:
     """foldl using 10 as our initializer and add the numbers in the list
     >>> myFoldl(operator.add, 10, [1, 2, 3, 4, 5])
     25
@@ -24,7 +24,7 @@ RoadSystem = NewType('RoadSystem', List[Section])
 heathrowToLondon = RoadSystem([Section((50, 10, 30)), Section((5, 90, 20)), Section((40, 2, 25)), Section((10, 8, 0))])
 
 # define our roadStepFast function
-def roadStepFast(pathData: Tuple[Path, Path, int, int], sectionData: Section, debug: bool = True) -> Tuple[Path, Path, int, int]:
+def roadStepFast(pathData: Tuple[Path, Path, int, int], sectionData: Section) -> Tuple[Path, Path, int, int]:
     sectionM = {"a" : sectionData[0], "b" : sectionData[1], "c" : sectionData[2]}
     forwardPriceToA = pathData[2] + sectionM['a']
     crossPriceToA = pathData[3] + sectionM['b'] + sectionM['c']
@@ -42,13 +42,20 @@ def roadStepFast(pathData: Tuple[Path, Path, int, int], sectionData: Section, de
     else: 
         newPathToB = Path([("C", sectionM['c']), ["A", sectionM['a']], *pathData[0]])
         newPriceB = crossPriceToB
-    if debug:
-        print(f'PathToA: {newPathToA}\nPathToB: {newPathToB} \nPriceA: {newPriceA} \nPriceB: {newPriceB}')
     return (newPathToA, newPathToB, newPriceA , newPriceB)
+
+# define a wrapper for debugging
+def roadStepFastWrap(pathData: Tuple[Path, Path, int, int], sectionData: Section) -> Tuple[Path, Path, int, int]:
+    (pathAResult, pathBResult, priceAResult, priceBResult) = roadStepFast(pathData, sectionData)
+    print(f'PathToA: {pathAResult}\nPathToB: {pathBResult} \nPriceA: {priceAResult} \nPriceB: {priceBResult}')
+    return (pathAResult, pathBResult, priceAResult, priceBResult)
 
 # define our optimalPath function
 def optimalPath(system: RoadSystem, debug: bool = False) -> Path:
-    (bestAPath, bestBPath, priceA, priceB) = myFoldl(roadStepFast, ([], [], 0, 0), system)
+    if debug:
+        (bestAPath, bestBPath, priceA, priceB) = myFoldl(roadStepFast, ([], [], 0, 0), system)
+    else:
+        (bestAPath, bestBPath, priceA, priceB) = myFoldl(roadStepFast, ([], [], 0, 0), system)
     if priceA <= priceB:
         return reverse(bestAPath)
     else:

@@ -16,9 +16,10 @@
 -- Haskell version
 myLuhn :: Int -> Bool
 myLuhn n =
-    let fn = sum . \c -> divMod (2 * c) 10
-        checksum = sum [ if f == 1 then read [c] else fn (read [c]) | (f, c) <- zip (cycle [0, 1]) (reverse (show n))]
+    let sumTuple (x, y) = x + y
+        fn = sumTuple . \c -> divMod (2 * c) 10
+        checksum = sum [ if f == 1 then read [c] else fn (read [c]) | (f, c) <- zip (cycle [1, 0]) (reverse (show n))]
     in (mod checksum 10) == 0
 
 testCC :: [Bool]
-testCC = map myLuhn [1234567890123456, 1234567890123452]
+testCC = map myLuhn [49927398716, 49927398717, 1234567812345678, 1234567812345670, 91]
